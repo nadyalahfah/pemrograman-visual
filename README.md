@@ -226,3 +226,205 @@ Baris ini menandai akhir dari deklarasi class `Form1`.
 3. Jika pengguna menekan tombol **Tampilkan**, maka data yang telah diinput akan ditampilkan dalam sebuah kotak dialog (MessageBox) berupa pesan sapaan.
 4. Jika pengguna menekan tombol **Hapus**, maka seluruh isi TextBox akan dikosongkan kembali.
 5. Jika pengguna menekan tombol **Keluar**, maka aplikasi akan ditutup.
+
+## Pertemuan 3: Operator dan Struktur Kendali
+
+Pada pertemuan ketiga, materi yang dipelajari adalah penggunaan operator dan struktur kendali pada Visual Basic .NET (VB.NET). Materi kemudian diterapkan pada sebuah program sederhana yang menerima input nilai ujian dan menampilkan gambar berdasarkan nilai yang dimasukkan.
+
+Selain penggunaan `If`, `ElseIf`, dan `Else`, pada pertemuan ini juga dipelajari cara melakukan validasi input menggunakan `TryParse` serta membatasi karakter yang dapat dimasukkan ke dalam `TextBox` menggunakan event `KeyPress`.
+
+### 3.1 Deskripsi Program
+
+Program pada pertemuan ini digunakan untuk memasukkan nilai ujian dengan rentang 0 sampai 100. Setelah tombol input ditekan, program akan mengecek apakah nilai yang dimasukkan berupa angka dan apakah nilainya berada dalam rentang yang diperbolehkan.
+
+Setelah nilai berhasil divalidasi, program akan menampilkan gambar yang berbeda berdasarkan nilai tersebut:
+
+| Nilai    | Gambar  |
+| -------- | ------- |
+| 0 - 50   | `1.jpg` |
+| 51 - 75  | `2.jpg` |
+| 76 - 100 | `3.jpg` |
+
+Gambar disimpan di dalam folder `Assets` pada project.
+
+### 3.2 Struktur Kendali `If`, `ElseIf`, dan `Else`
+
+Struktur `If` digunakan untuk membuat percabangan berdasarkan kondisi tertentu. Pada program ini, percabangan digunakan untuk menentukan gambar yang akan ditampilkan berdasarkan nilai ujian.
+
+```vb
+If nilaiUjian <= 50 Then
+    picImage.Image = Image.FromFile("Assets\1.jpg")
+ElseIf nilaiUjian <= 75 Then
+    picImage.Image = Image.FromFile("Assets\2.jpg")
+Else
+    picImage.Image = Image.FromFile("Assets\3.jpg")
+End If
+```
+
+Jika nilai kurang dari atau sama dengan 50, maka gambar `1.jpg` ditampilkan. Jika nilai lebih dari 50 tetapi masih kurang dari atau sama dengan 75, maka `2.jpg` ditampilkan. Selain kondisi tersebut, berarti nilai berada di atas 75 sehingga `3.jpg` ditampilkan.
+
+### 3.3 Validasi Input dengan `Integer.TryParse`
+
+Input dari `TextBox` pada dasarnya berupa data bertipe teks. Karena nilai ujian akan digunakan sebagai `Integer`, maka input perlu dikonversi terlebih dahulu.
+
+Pada program digunakan:
+
+```vb
+Dim nilaiUjian As Integer
+
+If Not Integer.TryParse(txtNilai.Text, nilaiUjian) Then
+    MessageBox.Show("Masukkan dalam bentuk angka")
+    txtNilai.Focus()
+    Return
+End If
+```
+
+`Integer.TryParse()` digunakan untuk mencoba mengubah isi `txtNilai` menjadi tipe data `Integer`.
+
+Jika input bukan angka, hasil `TryParse` adalah `False`. Karena menggunakan `Not`, kondisi `If` menjadi benar sehingga program menampilkan pesan **"Masukkan dalam bentuk angka"**.
+
+`txtNilai.Focus()` digunakan agar kursor kembali ke `TextBox` nilai sehingga pengguna dapat memperbaiki input. Sedangkan `Return` digunakan untuk menghentikan proses agar program tidak melanjutkan ke bagian berikutnya.
+
+### 3.4 Membatasi Nilai dengan Operator Logika
+
+Setelah memastikan input berupa angka, program juga membatasi nilai agar hanya menerima angka 0 sampai 100.
+
+```vb
+If nilaiUjian < 0 OrElse nilaiUjian > 100 Then
+    MessageBox.Show("Masukkan nilai 0 - 100")
+    txtNilai.Focus()
+    Return
+End If
+```
+
+Pada kondisi tersebut digunakan operator `OrElse`. Artinya, program akan masuk ke dalam `If` jika nilai kurang dari 0 **atau** nilai lebih dari 100.
+
+Jadi, walaupun input sudah berupa angka, nilai seperti `-10` atau `150` tetap ditolak karena tidak sesuai dengan rentang nilai yang ditentukan.
+
+### 3.5 Event `KeyPress`
+
+Selain melakukan validasi ketika tombol Input ditekan, input juga dibatasi sejak pengguna mengetik di `TextBox`.
+
+Event yang digunakan adalah `KeyPress`:
+
+```vb
+Private Sub txtNilai_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtNilai.KeyPress
+
+    If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
+        e.Handled = True
+    End If
+
+End Sub
+```
+
+`KeyPress` merupakan event yang terjadi ketika pengguna menekan sebuah tombol keyboard pada `TextBox`.
+
+Pada program ini, event tersebut digunakan agar `txtNilai` hanya dapat menerima karakter yang sesuai dengan kebutuhan input nilai.
+
+### 3.6 Penggunaan `KeyChar`
+
+Pada event `KeyPress` terdapat `e.KeyChar`.
+
+`KeyChar` digunakan untuk mendapatkan karakter yang sedang ditekan oleh pengguna. Karakter tersebut kemudian dapat diperiksa menggunakan fungsi dari `Char`.
+
+Contohnya:
+
+```vb
+Char.IsDigit(e.KeyChar)
+```
+
+Kode tersebut digunakan untuk mengecek apakah karakter yang ditekan merupakan angka.
+
+Pada program digunakan:
+
+```vb
+If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
+    e.Handled = True
+End If
+```
+
+Artinya, jika karakter yang ditekan bukan karakter kontrol dan bukan angka, maka input tersebut akan ditolak.
+
+`e.Handled = True` digunakan untuk memberitahu program bahwa input tersebut sudah ditangani sehingga karakter tidak dimasukkan ke dalam `TextBox`.
+
+Karakter kontrol tetap diperbolehkan karena pengguna masih perlu melakukan hal seperti menghapus karakter menggunakan Backspace.
+
+### 3.7 `IsDigit` dan `IsLetter`
+
+Pada validasi menggunakan `KeyPress`, fungsi `Char` dapat digunakan untuk memeriksa jenis karakter.
+
+Beberapa fungsi yang dipelajari antara lain:
+
+* `Char.IsDigit()` → mengecek apakah karakter merupakan angka.
+* `Char.IsLetter()` → mengecek apakah karakter merupakan huruf.
+* `Char.IsControl()` → mengecek apakah karakter merupakan karakter kontrol seperti Backspace.
+
+Contoh jika sebuah `TextBox` hanya ingin menerima huruf:
+
+```vb
+If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsLetter(e.KeyChar) Then
+    e.Handled = True
+End If
+```
+
+Dengan cara tersebut, karakter angka dapat ditolak dan `TextBox` hanya menerima huruf serta karakter kontrol.
+
+Jadi, penggunaan `IsDigit` atau `IsLetter` disesuaikan dengan jenis data yang ingin dimasukkan ke dalam `TextBox`.
+
+### 3.8 Pengaturan Gambar pada `PictureBox`
+
+Program juga menggunakan `PictureBox` dengan nama `picImage` untuk menampilkan gambar berdasarkan nilai yang dimasukkan.
+
+Gambar yang digunakan berada di folder:
+
+```text
+Assets
+├── 1.jpg
+├── 2.jpg
+└── 3.jpg
+```
+
+Pada pengaturan `PictureBox`, gambar dapat dibuat menyesuaikan ukuran area menggunakan properti `SizeMode`.
+
+Salah satu pengaturan yang digunakan adalah:
+
+```text
+SizeMode = Zoom
+```
+
+`Zoom` membuat gambar menyesuaikan ukuran `PictureBox` dengan tetap mempertahankan perbandingan ukuran gambar, sehingga gambar tidak terlihat terlalu melebar atau gepeng.
+
+### 3.9 Pengaturan `Copy to Output Directory`
+
+File gambar yang digunakan program perlu tersedia ketika aplikasi dijalankan. Oleh karena itu, file gambar pada folder `Assets` dapat diatur agar ikut disalin ke folder output project.
+
+Pada Properties file gambar dapat digunakan:
+
+```text
+Copy to Output Directory = Copy if newer
+```
+
+`Copy if newer` berarti file akan disalin ke folder output jika file tersebut belum ada atau versi file di project lebih baru daripada file yang sudah ada di folder output.
+
+Pengaturan ini membantu memastikan file gambar seperti `1.jpg`, `2.jpg`, dan `3.jpg` tetap tersedia ketika program dijalankan.
+
+### 3.10 Alur Kerja Program
+
+Alur program pada pertemuan ketiga adalah:
+
+1. Pengguna memasukkan nilai pada `txtNilai`.
+2. Event `KeyPress` memeriksa karakter yang diketik.
+3. Karakter selain angka dan karakter kontrol akan ditolak.
+4. Ketika tombol Input ditekan, `Integer.TryParse()` memeriksa apakah input dapat diubah menjadi angka.
+5. Jika bukan angka, program menampilkan pesan kesalahan.
+6. Jika berupa angka, program mengecek apakah nilai berada pada rentang 0 sampai 100.
+7. Jika nilai tidak sesuai, program menampilkan pesan kesalahan.
+8. Jika nilai valid, struktur `If`, `ElseIf`, dan `Else` menentukan gambar yang akan ditampilkan.
+9. Gambar ditampilkan melalui `PictureBox`.
+
+### 3.11 Kesimpulan
+
+Pada pertemuan ketiga, selain mempelajari operator dan struktur kendali, dipelajari juga cara membuat input menjadi lebih terkontrol. `TryParse` digunakan untuk memastikan data dapat diproses sebagai angka, sedangkan `KeyPress`, `KeyChar`, `IsDigit`, dan `IsLetter` dapat digunakan untuk membatasi karakter yang boleh dimasukkan pengguna.
+
+Penggunaan `If`, `ElseIf`, dan `Else` kemudian digunakan untuk menentukan hasil berdasarkan nilai yang dimasukkan. Pada bagian gambar, `PictureBox` digunakan untuk menampilkan hasil dan pengaturan `Zoom` digunakan agar gambar menyesuaikan area tampilannya.
+
