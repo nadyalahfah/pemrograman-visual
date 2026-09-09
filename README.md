@@ -428,3 +428,43 @@ Pada pertemuan ketiga, selain mempelajari operator dan struktur kendali, dipelaj
 
 Penggunaan `If`, `ElseIf`, dan `Else` kemudian digunakan untuk menentukan hasil berdasarkan nilai yang dimasukkan. Pada bagian gambar, `PictureBox` digunakan untuk menampilkan hasil dan pengaturan `Zoom` digunakan agar gambar menyesuaikan area tampilannya.
 
+# Tugas 1 - Aplikasi Login dan Perhitungan Pajak
+
+Project ini merupakan tugas Pemrograman Visual menggunakan **VB.NET Windows Forms** yang terdiri dari dua form, yaitu `FrmLogin` dan `FrmPajak`.
+
+## Materi yang Digunakan
+
+- Windows Forms dan komponen visual: `Label`, `TextBox`, `ComboBox`, `PictureBox`, dan `Button`
+- Event `Click`, `KeyPress`, dan `SelectedIndexChanged`
+- Validasi input menggunakan `Char.IsLetter`, `Char.IsDigit`, `Decimal.TryParse`
+- Percabangan `If...Then...ElseIf...Else`
+- Perpindahan antar form menggunakan `Show()`, `Hide()`, dan `Close()`
+- Mengosongkan input menggunakan `Clear()`
+- Mengembalikan fokus menggunakan `Focus()`
+- Menampilkan pesan menggunakan `MessageBox.Show()`
+
+## Form Login
+
+`FrmLogin` digunakan untuk login berdasarkan **role, nama, dan NIM**. Role yang tersedia adalah `Staff` dan `Manager`. Gambar pada `PictureBox` berubah sesuai role yang dipilih.
+
+Data login:
+- Staff: `Nadya` - `241712051`
+- Manager: `Mingyu` - `241712000`
+
+Input nama dibatasi menggunakan `KeyPress`, sedangkan proses login memeriksa kesesuaian role, nama, dan NIM.
+
+## Form Pajak
+
+`FrmPajak` digunakan untuk menghitung pajak berdasarkan pendapatan.
+
+| Pendapatan | Pajak |
+|---|---:|
+| ≤ Rp5.000.000 | 0% |
+| ≤ Rp30.000.000 | 10% |
+| ≤ Rp100.000.000 | 20% |
+| > Rp100.000.000 | 30% |
+
+Rumus:
+
+```text
+Pajak = Pendapatan × Persentase Pajak
