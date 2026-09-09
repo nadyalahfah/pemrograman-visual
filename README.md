@@ -428,3 +428,136 @@ Pada pertemuan ketiga, selain mempelajari operator dan struktur kendali, dipelaj
 
 Penggunaan `If`, `ElseIf`, dan `Else` kemudian digunakan untuk menentukan hasil berdasarkan nilai yang dimasukkan. Pada bagian gambar, `PictureBox` digunakan untuk menampilkan hasil dan pengaturan `Zoom` digunakan agar gambar menyesuaikan area tampilannya.
 
+## Tugas 1 - Aplikasi Login dan Perhitungan Pajak
+
+Project ini merupakan tugas Pemrograman Visual menggunakan **VB.NET Windows Forms** yang terdiri dari dua form, yaitu `FrmLogin` dan `FrmPajak`.
+
+### Materi yang Digunakan
+
+- Windows Forms dan komponen visual: `Label`, `TextBox`, `ComboBox`, `PictureBox`, dan `Button`
+- Event `Click`, `KeyPress`, dan `SelectedIndexChanged`
+- Validasi input menggunakan `Char.IsLetter`, `Char.IsDigit`, `Decimal.TryParse`
+- Percabangan `If...Then...ElseIf...Else`
+- Perpindahan antar form menggunakan `Show()`, `Hide()`, dan `Close()`
+- Mengosongkan input menggunakan `Clear()`
+- Mengembalikan fokus menggunakan `Focus()`
+- Menampilkan pesan menggunakan `MessageBox.Show()`
+
+### Form Login
+
+`FrmLogin` digunakan untuk login berdasarkan **role, nama, dan NIM**. Role yang tersedia adalah `Staff` dan `Manager`. Gambar pada `PictureBox` berubah sesuai role yang dipilih.
+
+Data login:
+- Staff: `Nadya` - `241712051`
+- Manager: `Mingyu` - `241712000`
+
+Input nama dibatasi menggunakan `KeyPress`, sedangkan proses login memeriksa kesesuaian role, nama, dan NIM.
+
+### Form Pajak
+
+`FrmPajak` digunakan untuk menghitung pajak berdasarkan pendapatan.
+
+| Pendapatan | Pajak |
+|---|---:|
+| ≤ Rp5.000.000 | 0% |
+| ≤ Rp30.000.000 | 10% |
+| ≤ Rp100.000.000 | 20% |
+| > Rp100.000.000 | 30% |
+
+Rumus:
+
+```text
+Pajak = Pendapatan × Persentase Pajak
+```
+
+## Pertemuan 4: Struktur Perulangan
+
+### Tujuan
+Mempelajari penggunaan struktur perulangan `For` pada VB.NET untuk menampilkan data berdasarkan nilai awal dan nilai akhir
+
+### Materi
+- Perulangan `For`
+- `Step -1` untuk perulangan menurun
+- `Integer.TryParse()` untuk validasi input angka
+- Event `KeyPress` untuk membatasi input
+- `ListBox` untuk menampilkan hasil
+- `If...Else` untuk menentukan arah perulangan
+
+### Komponen
+- `txtNilaiAwal` → input nilai awal
+- `txtNilaiAkhir` → input nilai akhir
+- `btnInput` → menjalankan perulangan
+- `lstHasil` → menampilkan hasil
+
+### Validasi Input
+Input diperiksa menggunakan `Integer.TryParse()` agar hanya data berupa angka yang dapat diproses
+
+```vb
+If Not Integer.TryParse(txtNilaiAwal.Text, nilaiAwal) Then
+    MessageBox.Show("Masukkan angka yang valid!")
+    txtNilaiAwal.Focus()
+    Return
+End If
+```
+
+Event `KeyPress` juga digunakan agar TextBox hanya menerima angka.
+
+```vb
+If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
+    e.Handled = True
+End If
+```
+
+### Perulangan
+
+Jika nilai awal lebih kecil dari nilai akhir, program menggunakan perulangan biasa:
+
+```vb
+For i As Integer = nilaiAwal To nilaiAkhir
+    lstHasil.Items.Add(i)
+Next
+```
+
+Jika nilai awal lebih besar, digunakan `Step -1`:
+
+```vb
+For i As Integer = nilaiAwal To nilaiAkhir Step -1
+    lstHasil.Items.Add(i)
+Next
+```
+
+Sebelum menampilkan hasil baru, data pada `ListBox` dikosongkan menggunakan:
+
+```vb
+lstHasil.Items.Clear()
+```
+
+### Alur Program
+
+1. Masukkan nilai awal dan nilai akhir
+2. Program melakukan validasi input
+3. Program menentukan apakah perulangan naik atau turun
+4. Perulangan `For` dijalankan
+5. Hasil ditampilkan pada `ListBox`.
+
+### Contoh
+
+Input `1` sampai `5` menghasilkan:
+
+```text
+1
+2
+3
+4
+5
+```
+
+Input `5` sampai `1` menghasilkan:
+
+```text
+5
+4
+3
+2
+1
+```
