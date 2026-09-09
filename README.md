@@ -468,6 +468,7 @@ Rumus:
 
 ```text
 Pajak = Pendapatan × Persentase Pajak
+```
 
 ## Pertemuan 4: Struktur Perulangan
 
