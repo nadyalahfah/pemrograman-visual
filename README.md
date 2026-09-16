@@ -561,3 +561,150 @@ Input `5` sampai `1` menghasilkan:
 2
 1
 ```
+
+## Pertemuan 5: Fungsi dan Array
+
+### Tujuan
+Mempelajari penggunaan Function, Sub, array 1 dimensi, array 2 dimensi, dan `KeyPress` pada VB.NET.
+
+### Materi
+Pada pertemuan ini dipelajari:
+- Function dan Sub
+- Parameter dan `Return`
+- Array 1 dimensi
+- Array 2 dimensi
+- `MessageBox.Show()`
+- `KeyPress`
+- `Char.IsControl()`
+- `Char.IsDigit()`
+- `e.Handled`
+
+### 1. Module `ModArray`
+
+`ModArray` digunakan untuk menyimpan Sub, Function, dan array yang dapat dipanggil dari Form.
+
+```vb
+Module ModArray
+
+    Public Sub TampilkanPesan(nama As Integer)
+        MessageBox.Show("halo " & nama)
+    End Sub
+
+    Function Hitung(panjang As Integer, lebar As Integer) As Integer
+        If panjang <= 50 Then
+            Return (2 * panjang) + (2 * lebar)
+        Else
+            Return panjang * lebar
+        End If
+    End Function
+
+    Public nilai() As Integer = {50, 60, 70, 80, 90}
+
+    Public nilai2D(,) As Integer = {
+        {55, 58, 65},
+        {10, 20, 82},
+        {84, 86, 90}
+    }
+
+End Module
+```
+
+`TampilkanPesan()` merupakan Sub yang digunakan untuk menampilkan pesan menggunakan `MessageBox.Show()`. Parameter `nama` digunakan untuk menerima nilai yang akan ditampilkan.
+
+`Function Hitung()` mempunyai dua parameter yaitu `panjang` dan `lebar`, kemudian mengembalikan nilai menggunakan `Return`. Jika `panjang <= 50`, maka perhitungannya menggunakan `(2 * panjang) + (2 * lebar)`. Jika kondisi tidak terpenuhi, maka menggunakan `panjang * lebar`.
+
+### 2. Array 1 Dimensi
+
+```vb
+Public nilai() As Integer = {50, 60, 70, 80, 90}
+```
+
+Array `nilai` digunakan untuk menyimpan beberapa angka dalam satu variabel. Karena indeks dimulai dari 0, maka `nilai(0)` berisi 50 sampai `nilai(4)` berisi 90.
+
+Contoh:
+- `nilai(0) = 50`
+- `nilai(1) = 60`
+- `nilai(2) = 70`
+- `nilai(3) = 80`
+- `nilai(4) = 90`
+
+### 3. Array 2 Dimensi
+
+```vb
+Public nilai2D(,) As Integer = {
+    {55, 58, 65},
+    {10, 20, 82},
+    {84, 86, 90}
+}
+```
+
+Array 2 dimensi memiliki baris dan kolom sehingga bentuknya seperti tabel.
+
+|   |   |   |
+|---|---|---|
+| 55| 58| 65|
+| 10| 20| 82|
+| 84| 86| 90|
+
+Pengambilan datanya menggunakan indeks baris dan kolom. Contohnya `nilai2D(1, 2)` berarti mengambil data pada baris indeks 1 dan kolom indeks 2, yaitu 82.
+
+### 4. Form FrmArray
+
+Form menggunakan beberapa komponen yaitu:
+- `txtPanjang` untuk input panjang
+- `txtLebar` untuk input lebar
+- `btnTampil` untuk menjalankan proses
+- `lstNilai` untuk menampilkan data
+- `lblPanjang` dan `lblLebar` sebagai label
+
+Komponen tersebut dibuat pada `FrmArray.Designer.vb`.
+
+### 5. Event btnTampil_Click
+
+```vb
+Private Sub btnTampil_Click(sender As Object, e As EventArgs) Handles btnTampil.Click
+    'MessageBox.Show(Hitung(txtPanjang.Text, txtLebar.Text))
+    'MessageBox.Show(nilai(50))
+    'lstNilai.Items.Add(nilai(5))
+    'For i As Integer = 0 To nilai.Length - 1
+    '    lstNilai.Items.Add(nilai(i))
+    MessageBox.Show(nilai2D(1, 2))
+End Sub
+```
+
+Kode ini dijalankan ketika tombol `btnTampil` diklik. Beberapa baris diberi tanda `'` yang berarti komentar, sehingga tidak dijalankan. Baris tersebut merupakan contoh percobaan untuk memanggil Function, mengambil nilai array, dan menampilkan isi array menggunakan `For` ke dalam `ListBox`.
+
+Kode yang aktif adalah:
+```vb
+MessageBox.Show(nilai2D(1, 2))
+```
+
+Kode tersebut mengambil nilai dari array 2 dimensi pada indeks (1, 2) dan menampilkannya menggunakan `MessageBox`. Hasilnya adalah 82.
+
+### 6. KeyPress pada txtPanjang
+
+```vb
+Private Sub txtPanjang_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPanjang.KeyPress
+    If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
+        e.Handled = True
+    End If
+End Sub
+```
+
+Kode ini digunakan untuk membatasi input pada `txtPanjang`. `Char.IsControl()` digunakan untuk mengecek karakter kontrol seperti Backspace, sedangkan `Char.IsDigit()` digunakan untuk mengecek apakah karakter yang dimasukkan berupa angka. Jika bukan karakter kontrol dan bukan angka, maka `e.Handled = True` akan menolak input tersebut.
+
+### 7. KeyPress pada txtLebar
+
+```vb
+Private Sub txtLebar_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtLebar.KeyPress
+    If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
+        e.Handled = True
+    End If
+End Sub
+```
+
+Kode ini mempunyai fungsi yang sama seperti pada `txtPanjang`, yaitu membatasi input agar hanya menerima angka dan karakter kontrol.
+
+### Kesimpulan
+
+Pada pertemuan ini dipelajari cara menggunakan Sub dan Function, termasuk penggunaan parameter dan Return. Selain itu, dipelajari array 1 dimensi dan array 2 dimensi untuk menyimpan beberapa data serta cara mengambil data berdasarkan indeks. Pada Form juga digunakan KeyPress untuk membatasi input agar hanya menerima angka.
