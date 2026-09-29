@@ -707,4 +707,32 @@ Kode ini mempunyai fungsi yang sama seperti pada `txtPanjang`, yaitu membatasi i
 
 ### Kesimpulan
 
-Pada pertemuan ini dipelajari cara menggunakan Sub dan Function, termasuk penggunaan parameter dan Return. Selain itu, dipelajari array 1 dimensi dan array 2 dimensi untuk menyimpan beberapa data serta cara mengambil data berdasarkan indeks. Pada Form juga digunakan KeyPress untuk membatasi input agar hanya menerima angka.
+Pada pertemuan ini dipelajari cara menggunakan Sub dan Function, termasuk penggunaan parameter dan Return. Selain itu, dipelajari array 1 dimensi dan array 2 dimensi untuk menyimpan beberapa data serta cara mengambil data berdasarkan indeks. Pada Form juga digunakan KeyPress untuk membatasi input agar hanya menerima angka
+
+## Pertemuan 6 - Database
+
+### Deskripsi
+Project ini merupakan implementasi database menggunakan VB.NET Windows Forms yang terhubung dengan PostgreSQL melalui Supabase. Project ini digunakan untuk menampilkan dan menambahkan data mahasiswa.
+
+### Fitur
+- Tes koneksi database
+- Menampilkan data mahasiswa
+- Menambahkan data mahasiswa
+
+### Struktur File
+- `Form1.vb` → mengatur tampilan dan proses pada form.
+- `ModDatabase.vb` → mengatur koneksi ke database.
+- `ModFunction.vb` → berisi fungsi untuk mengambil dan menjalankan data.
+- `ModQuery.vb` → berisi query untuk menambah dan menampilkan data.
+- `appsettings.json` → menyimpan konfigurasi koneksi database.
+
+### appsettings.json
+File `appsettings.json` digunakan untuk menyimpan informasi koneksi ke database Supabase, seperti host, port, nama database, username, dan password.
+
+Contoh:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=...;Port=6543;Database=postgres;Username=...;Password=...;SSL Mode=Require;Trust Server Certificate=true"
+  }
+}
