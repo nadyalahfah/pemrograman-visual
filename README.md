@@ -735,7 +735,7 @@ Contoh:
   "ConnectionStrings": {
     "DefaultConnection": "Host=...;Port=6543;Database=postgres;Username=...;Password=...;SSL Mode=Require;Trust Server Certificate=true"
   }
-}
+}    
 
 ## Tugas 7: Aplikasi Peminjaman Buku (Perpustakaan)
 
@@ -795,7 +795,6 @@ Fitur ini menyimpan isi `lstPeminjaman` ke file `peminjaman.csv` di folder Docum
 4. Jika valid, data dimasukkan ke ListBox, tanggal kembali dihitung otomatis, dan form dikosongkan.
 5. Pengguna bisa menekan **Ekspor CSV** untuk menyimpan data ke file teks. Jika file sedang dibuka di Excel, program akan menampilkan pesan error yang ramah dan tidak *crash*.
 
----
 
 ## Tugas 8: Aplikasi Inventaris Buku Perpustakaan
 
