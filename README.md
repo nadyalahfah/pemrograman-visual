@@ -736,3 +736,137 @@ Contoh:
     "DefaultConnection": "Host=...;Port=6543;Database=postgres;Username=...;Password=...;SSL Mode=Require;Trust Server Certificate=true"
   }
 }
+
+## Tugas 7: Aplikasi Peminjaman Buku (Perpustakaan)
+
+Project ini merupakan tugas Pemrograman Visual menggunakan **VB.NET Windows Forms** untuk mencatat transaksi peminjaman buku di perpustakaan. Aplikasi ini dibuat untuk menggantikan pencatatan manual agar terhindar dari kesalahan ketik kode buku, lupa menghitung tanggal kembali, dan mencegah buku yang sama dipinjam dua kali secara bersamaan.
+
+### Materi yang Digunakan
+- **Komponen Windows Forms:** `TextBox`, `ComboBox`, `Button`, `ListBox`, dan `ErrorProvider`.
+- **Validasi Input:** `Integer.TryParse`, fungsi `Char.IsDigit`, dan pemotongan string (`Substring`).
+- **Struktur Data:** `List(Of String)` untuk menyimpan daftar kode buku yang sedang dipinjam.
+- **Penanganan File & Error:** `StreamWriter`, `System.IO.Path`, serta `Try...Catch...Finally` dengan dua tipe exception (`IOException` dan `UnauthorizedAccessException`).
+
+### Daftar Komponen (Control) yang Digunakan
+| Nama Komponen | Jenis Control | Fungsi |
+|---|---|---|
+| `lblJudulForm` | Label | Menampilkan judul form "Peminjaman Buku" |
+| `txtKodeBuku` | TextBox | Tempat input kode buku (format: BK + 4 digit) |
+| `txtJudul` | TextBox | Tempat input judul buku |
+| `cboKategori` | ComboBox | Memilih kategori buku (Fiksi, Nonfiksi, Referensi, Majalah) |
+| `txtNamaPeminjam` | TextBox | Tempat input nama peminjam |
+| `txtLamaPinjam` | TextBox | Tempat input durasi pinjam (dalam hari) |
+| `btnPinjam` | Button | Mencatat peminjaman ke dalam ListBox |
+| `btnBersihkan` | Button | Mengosongkan form |
+| `lstPeminjaman` | ListBox | Menampilkan daftar buku yang sedang dipinjam |
+| `btnEkspor` | Button | Menyimpan daftar peminjaman ke file CSV |
+| `lblStatus` | Label | Menampilkan jumlah peminjaman saat ini |
+| `errPinjam` | ErrorProvider | Menampilkan ikon error merah jika input salah |
+
+### Penjelasan Kode Program (`FormPeminjaman.vb`)
+
+#### a. Validasi Terpusat (`Function ValidasiInput()`)
+Berbeda dengan pendekatan yang menghentikan program di error pertama, fungsi ini memeriksa **semua** isian sekaligus. Jika ada yang salah, fungsi akan memberikan pesan pada `errPinjam` dan mengembalikan nilai `False`.
+- **Kode Buku:** Menggunakan fungsi `KodeBukuValid` dari Module. Lalu dicek menggunakan `List.Contains(kode)` untuk memastikan buku tidak sedang dipinjam (`ElseIf kodeTerpinjam.Contains(kode) Then`).
+- **Lama Pinjam:** Menggunakan `Integer.TryParse`. Jika bukan angka, atau angkanya kurang dari 1 / lebih dari 14, maka akan muncul error.
+- **Tanpa MessageBox:** Sesuai aturan, error validasi hanya ditampilkan lewat ikon merah `ErrorProvider` di samping kotak input yang salah.
+
+#### b. Tombol Pinjam (`btnPinjam_Click`)
+Saat tombol diklik, program memanggil `ValidasiInput()`. Jika lolos, program mengambil data, menghitung tanggal kembali dengan `Date.Today.AddDays(lama).ToString("dd/MM/yyyy")`, lalu memasukkannya ke `lstPeminjaman` dengan format:
+`BK0012 | Laskar Pelangi | Fiksi | Rina Lubis | 7 hari | kembali 28/10/2026`
+Setelah itu, kode buku dimasukkan ke `kodeTerpinjam.Add(kode)` agar tidak bisa dipinjam dua kali, dan `lblStatus` diperbarui.
+
+#### c. Tombol Ekspor (`btnEkspor_Click`)
+Fitur ini menyimpan isi `lstPeminjaman` ke file `peminjaman.csv` di folder Documents. 
+- Jika list kosong, program akan menampilkan pesan dan tidak membuat file.
+- Proses penulisan file dibungkus dengan `Try...Catch...Finally`.
+- `Catch ex As IOException` menangani error jika file sedang dibuka oleh program lain (misalnya Excel).
+- `Catch ex As UnauthorizedAccessException` menangani error jika sistem menolak akses penulisan file.
+- `Finally` memastikan `writer.Close()` selalu dieksekusi, apapun yang terjadi.
+
+#### d. Tantangan Tambahan (Validating & Module)
+- **Module `ModValidasi`:** Fungsi `KodeBukuValid` dipindahkan ke Module agar bisa dipanggil dari mana saja. Fungsi ini mengecek panjang string harus 6, diawali "BK", dan 4 karakter sisanya adalah angka.
+- **Event `Validating`:** Pada `txtKodeBuku`, jika user mengetik format yang salah lalu pindah ke kotak lain, error akan langsung muncul tanpa harus menekan tombol Pinjam. Tidak menggunakan `e.Cancel = True` agar user tetap bisa pindah kotak.
+
+### Alur Kerja Program
+1. Pengguna mengisi form peminjaman.
+2. Saat tombol **Pinjam** diklik, `ValidasiInput()` dijalankan.
+3. Jika ada kesalahan, ikon merah muncul di samping input yang salah.
+4. Jika valid, data dimasukkan ke ListBox, tanggal kembali dihitung otomatis, dan form dikosongkan.
+5. Pengguna bisa menekan **Ekspor CSV** untuk menyimpan data ke file teks. Jika file sedang dibuka di Excel, program akan menampilkan pesan error yang ramah dan tidak *crash*.
+
+---
+
+## Tugas 8: Aplikasi Inventaris Buku Perpustakaan
+
+Project ini merupakan tugas lanjutan untuk mengelola inventaris buku menggunakan **DataTable di memori** (tanpa database eksternal). Aplikasi ini memungkinkan penambahan buku baru, pencarian gabungan (teks & kategori), dan melihat ringkasan stok secara *real-time*.
+
+### Materi yang Digunakan
+- **Struktur Data:** `DataTable`, `DataColumn`, `DataRow`, `BindingSource`.
+- **Komponen Windows Forms:** `DataGridView`, `ComboBox`, `CheckBox`, `TextBox`, `Label`, dan `ErrorProvider`.
+- **Filter & Pencarian:** Ekspresi `Filter` pada `BindingSource` dengan logika `AND` dan `LIKE`.
+- **Perulangan:** `For Each` untuk membaca baris DataTable dan DataGridView.
+
+### Daftar Komponen (Control) yang Digunakan
+| Nama Komponen | Jenis Control | Fungsi |
+|---|---|---|
+| `lblJudulForm` | Label | Menampilkan judul form "Inventaris Buku Perpustakaan" |
+| `txtKodeBuku` | TextBox | Input kode buku (BK + 4 digit) |
+| `txtJudul` | TextBox | Input judul buku |
+| `txtPenulis` | TextBox | Input nama penulis |
+| `cboKategori` | ComboBox | Memilih kategori (Fiksi, Nonfiksi, Referensi, Majalah) |
+| `txtTahun` | TextBox | Input tahun terbit |
+| `txtStok` | TextBox | Input jumlah stok |
+| `btnTambah` | Button | Menambahkan buku ke DataTable |
+| `btnBersihkan` | Button | Mengosongkan form input |
+| `txtCari` | TextBox | Mencari buku berdasarkan judul/penulis |
+| `cboFilterKategori` | ComboBox | Filter kategori (Semua, Fiksi, Nonfiksi, dll) |
+| `dgvBuku` | DataGridView | Menampilkan tabel inventaris |
+| `bsBuku` | BindingSource | Perantara DataTable dan DataGridView |
+| `lblJumlah` | Label | Menampilkan "Menampilkan X dari Y buku" |
+| `lblTotalStok` | Label | Menampilkan total stok buku yang tampil |
+| `errBuku` | ErrorProvider | Penanda input yang salah |
+| `cboUrut` | ComboBox | (Bonus) Mengatur urutan tabel |
+| `chkStokHabis` | CheckBox | (Bonus) Filter hanya stok 0 |
+
+### Penjelasan Kode Program (`FormInventaris.vb`)
+
+#### a. Inisialisasi Data Awal (`FormInventaris_Load`)
+Saat form dibuka, program membuat struktur kolom `DataTable` (`KodeBuku`, `Judul`, `Penulis`, `Kategori`, `Tahun`, `Stok`). Lalu, 10 data buku dimasukkan menggunakan `tabelBuku.Rows.Add(...)`.
+DataTable ini dihubungkan ke `dgvBuku` melalui `bsBuku`:
+`bsBuku.DataSource = tabelBuku`
+`dgvBuku.DataSource = bsBuku`
+
+#### b. Mengatur Kerapian Kolom Grid
+Setelah DataSource diisi, program mengatur tampilan grid agar rapi:
+- `AutoSizeColumnsMode = Fill` membuat kolom memenuhi lebar grid.
+- `dgvBuku.Columns("Judul").FillWeight = 200` membuat kolom judul lebih lebar.
+- Kolom Tahun dan Stok diatur rata tengah dengan `DefaultCellStyle.Alignment = MiddleCenter`.
+
+#### c. Validasi Tambah Buku (`Function ValidasiInput()`)
+Validasi di sini menggunakan `errBuku` (ErrorProvider). Aturannya:
+- **Kode Buku:** Harus valid secara format (BK + 4 digit). Selain itu, dilakukan perulangan pada `tabelBuku.Rows` untuk mengecek apakah kode tersebut sudah ada. Jika ada, muncul error "Kode buku sudah ada."
+- **Tahun:** Harus angka, dan berada di rentang 1900 sampai `Date.Today.Year`.
+- **Stok:** Harus angka 0 atau lebih.
+
+#### d. Pencarian Gabungan & Ringkasan (`Sub TerapkanFilter()`)
+Ini adalah inti dari Tugas 8. Fungsi ini menyusun teks filter untuk `bsBuku.Filter` secara bertahap:
+1. **Filter Teks:** Jika `txtCari` diisi, bentuk filternya: `(Judul LIKE '%kata%' OR Penulis LIKE '%kata%')`.
+2. **Filter Kategori:** Jika `cboFilterKategori` tidak memilih "Semua", tambahkan syarat: `Kategori = 'Pilihan'`.
+3. **Filter Stok (Bonus):** Jika `chkStokHabis` dicentang, tambahkan syarat: `Stok = 0`.
+4. **Penggabungan:** Semua syarat digabungkan dengan `String.Join(" AND ", syaratGabungan)`. 
+5. **Pengurutan (Bonus):** Menggunakan `bsBuku.Sort` (ASC/DESC) berdasarkan pilihan di `cboUrut`.
+
+#### e. Keamanan Karakter Khusus (`AmankanTeks`)
+Jika pengguna mengetik tanda kutip satu (`'`) di kotak pencarian, string tersebut bisa merusak ekspresi SQL/Filter. Fungsi `AmankanTeks` mengubah `'` menjadi `''` (dua kutip) agar program tidak *crash*.
+
+#### f. Menghitung Ringkasan Stok (`HitungRingkasan`)
+Setelah filter diterapkan, program melakukan perulangan `For Each baris As DataGridViewRow In dgvBuku.Rows` untuk menghitung total stok dari baris yang **sedang tampil di layar**. Hasilnya ditampilkan di `lblTotalStok` dan `lblJumlah`.
+
+### Alur Kerja Program
+1. Form dibuka, data 10 buku dimuat ke DataGridView.
+2. Pengguna mengisi form input dan klik **Tambah**. Data langsung masuk ke tabel tanpa me-refresh form.
+3. Jika kode buku digandakan, ErrorProvider muncul.
+4. Pengguna mengetik kata kunci pencarian, atau mengganti filter kategori, atau mencentang "Hanya stok habis".
+5. Grid langsung menyaring data sesuai kriteria (menggabungkan teks dan kategori).
+6. Label `lblJumlah` dan `lblTotalStok` otomatis berubah menyesuaikan data yang sedang tampil.
