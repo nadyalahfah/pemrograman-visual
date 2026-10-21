@@ -737,6 +737,8 @@ Contoh:
   }
 }    
 
+---
+
 ## Tugas 7: Aplikasi Peminjaman Buku (Perpustakaan)
 
 Project ini merupakan tugas Pemrograman Visual menggunakan **VB.NET Windows Forms** untuk mencatat transaksi peminjaman buku di perpustakaan. Aplikasi ini dibuat untuk menggantikan pencatatan manual agar terhindar dari kesalahan ketik kode buku, lupa menghitung tanggal kembali, dan mencegah buku yang sama dipinjam dua kali secara bersamaan.
