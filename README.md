@@ -797,6 +797,7 @@ Fitur ini menyimpan isi `lstPeminjaman` ke file `peminjaman.csv` di folder Docum
 4. Jika valid, data dimasukkan ke ListBox, tanggal kembali dihitung otomatis, dan form dikosongkan.
 5. Pengguna bisa menekan **Ekspor CSV** untuk menyimpan data ke file teks. Jika file sedang dibuka di Excel, program akan menampilkan pesan error yang ramah dan tidak *crash*.
 
+---
 
 ## Tugas 8: Aplikasi Inventaris Buku Perpustakaan
 
@@ -808,64 +809,7 @@ Project ini merupakan tugas lanjutan untuk mengelola inventaris buku menggunakan
 - **Filter & Pencarian:** Ekspresi `Filter` pada `BindingSource` dengan logika `AND` dan `LIKE`.
 - **Perulangan:** `For Each` untuk membaca baris DataTable dan DataGridView.
 
-### Daftar Komponen (Control) yang Digunakan
-| Nama Komponen | Jenis Control | Fungsi |
-|---|---|---|
-| `lblJudulForm` | Label | Menampilkan judul form "Inventaris Buku Perpustakaan" |
-| `txtKodeBuku` | TextBox | Input kode buku (BK + 4 digit) |
-| `txtJudul` | TextBox | Input judul buku |
-| `txtPenulis` | TextBox | Input nama penulis |
-| `cboKategori` | ComboBox | Memilih kategori (Fiksi, Nonfiksi, Referensi, Majalah) |
-| `txtTahun` | TextBox | Input tahun terbit |
-| `txtStok` | TextBox | Input jumlah stok |
-| `btnTambah` | Button | Menambahkan buku ke DataTable |
-| `btnBersihkan` | Button | Mengosongkan form input |
-| `txtCari` | TextBox | Mencari buku berdasarkan judul/penulis |
-| `cboFilterKategori` | ComboBox | Filter kategori (Semua, Fiksi, Nonfiksi, dll) |
-| `dgvBuku` | DataGridView | Menampilkan tabel inventaris |
-| `bsBuku` | BindingSource | Perantara DataTable dan DataGridView |
-| `lblJumlah` | Label | Menampilkan "Menampilkan X dari Y buku" |
-| `lblTotalStok` | Label | Menampilkan total stok buku yang tampil |
-| `errBuku` | ErrorProvider | Penanda input yang salah |
-| `cboUrut` | ComboBox | (Bonus) Mengatur urutan tabel |
-| `chkStokHabis` | CheckBox | (Bonus) Filter hanya stok 0 |
-
-### Penjelasan Kode Program (`FormInventaris.vb`)
-
-#### a. Inisialisasi Data Awal (`FormInventaris_Load`)
-Saat form dibuka, program membuat struktur kolom `DataTable` (`KodeBuku`, `Judul`, `Penulis`, `Kategori`, `Tahun`, `Stok`). Lalu, 10 data buku dimasukkan menggunakan `tabelBuku.Rows.Add(...)`.
-DataTable ini dihubungkan ke `dgvBuku` melalui `bsBuku`:
-`bsBuku.DataSource = tabelBuku`
-`dgvBuku.DataSource = bsBuku`
-
-#### b. Mengatur Kerapian Kolom Grid
-Setelah DataSource diisi, program mengatur tampilan grid agar rapi:
-- `AutoSizeColumnsMode = Fill` membuat kolom memenuhi lebar grid.
-- `dgvBuku.Columns("Judul").FillWeight = 200` membuat kolom judul lebih lebar.
-- Kolom Tahun dan Stok diatur rata tengah dengan `DefaultCellStyle.Alignment = MiddleCenter`.
-
-#### c. Validasi Tambah Buku (`Function ValidasiInput()`)
-Validasi di sini menggunakan `errBuku` (ErrorProvider). Aturannya:
-- **Kode Buku:** Harus valid secara format (BK + 4 digit). Selain itu, dilakukan perulangan pada `tabelBuku.Rows` untuk mengecek apakah kode tersebut sudah ada. Jika ada, muncul error "Kode buku sudah ada."
-- **Tahun:** Harus angka, dan berada di rentang 1900 sampai `Date.Today.Year`.
-- **Stok:** Harus angka 0 atau lebih.
-
-#### d. Pencarian Gabungan & Ringkasan (`Sub TerapkanFilter()`)
-Ini adalah inti dari Tugas 8. Fungsi ini menyusun teks filter untuk `bsBuku.Filter` secara bertahap:
-1. **Filter Teks:** Jika `txtCari` diisi, bentuk filternya: `(Judul LIKE '%kata%' OR Penulis LIKE '%kata%')`.
-2. **Filter Kategori:** Jika `cboFilterKategori` tidak memilih "Semua", tambahkan syarat: `Kategori = 'Pilihan'`.
-3. **Filter Stok (Bonus):** Jika `chkStokHabis` dicentang, tambahkan syarat: `Stok = 0`.
-4. **Penggabungan:** Semua syarat digabungkan dengan `String.Join(" AND ", syaratGabungan)`. 
-5. **Pengurutan (Bonus):** Menggunakan `bsBuku.Sort` (ASC/DESC) berdasarkan pilihan di `cboUrut`.
-
-#### e. Keamanan Karakter Khusus (`AmankanTeks`)
-Jika pengguna mengetik tanda kutip satu (`'`) di kotak pencarian, string tersebut bisa merusak ekspresi SQL/Filter. Fungsi `AmankanTeks` mengubah `'` menjadi `''` (dua kutip) agar program tidak *crash*.
-
-#### f. Menghitung Ringkasan Stok (`HitungRingkasan`)
-Setelah filter diterapkan, program melakukan perulangan `For Each baris As DataGridViewRow In dgvBuku.Rows` untuk menghitung total stok dari baris yang **sedang tampil di layar**. Hasilnya ditampilkan di `lblTotalStok` dan `lblJumlah`.
-
-### Alur Kerja Program
-1. Form dibuka, data 10 buku dimuat ke DataGridView.
+### Daftar Komponen (
 2. Pengguna mengisi form input dan klik **Tambah**. Data langsung masuk ke tabel tanpa me-refresh form.
 3. Jika kode buku digandakan, ErrorProvider muncul.
 4. Pengguna mengetik kata kunci pencarian, atau mengganti filter kategori, atau mencentang "Hanya stok habis".
