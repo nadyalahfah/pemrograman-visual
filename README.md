@@ -726,19 +726,6 @@ Project ini merupakan implementasi database menggunakan VB.NET Windows Forms yan
 - `ModQuery.vb` → berisi query untuk menambah dan menampilkan data.
 - `appsettings.json` → menyimpan konfigurasi koneksi database.
 
-### appsettings.json
-File `appsettings.json` digunakan untuk menyimpan informasi koneksi ke database Supabase, seperti host, port, nama database, username, dan password.
-
-Contoh:
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=...;Port=6543;Database=postgres;Username=...;Password=...;SSL Mode=Require;Trust Server Certificate=true"
-  }
-}    
-
----
-
 ## Tugas 7: Aplikasi Peminjaman Buku (Perpustakaan)
 
 Project ini merupakan tugas Pemrograman Visual menggunakan **VB.NET Windows Forms** untuk mencatat transaksi peminjaman buku di perpustakaan. Aplikasi ini dibuat untuk menggantikan pencatatan manual agar terhindar dari kesalahan ketik kode buku, lupa menghitung tanggal kembali, dan mencegah buku yang sama dipinjam dua kali secara bersamaan.
